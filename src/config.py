@@ -96,10 +96,13 @@ _RELOADABLE_ENV_SETTINGS = (
     # every runtime consumer resolves it lazily (text_processor.split_text_into_chunks,
     # translate_file, refine_file) rather than snapshotting it at import.
     ('MAX_TOKENS_PER_CHUNK', 'MAX_TOKENS_PER_CHUNK', '450'),
+    # Plain Text Mode fallback bypass: when true, mismatched paragraph counts are accepted
+    # directly without triggering the expensive per-paragraph repair loop.
+    ('DISABLE_PARAGRAPH_FALLBACK', 'DISABLE_PARAGRAPH_FALLBACK', 'false'),
 )
 
 
-_NOTIFY_BOOL_ATTRS = {'NOTIFY_ON_SUCCESS', 'NOTIFY_ON_FAILURE', 'NOTIFY_ON_INTERRUPTION'}
+_NOTIFY_BOOL_ATTRS = {'NOTIFY_ON_SUCCESS', 'NOTIFY_ON_FAILURE', 'NOTIFY_ON_INTERRUPTION', 'DISABLE_PARAGRAPH_FALLBACK'}
 _NOTIFY_INT_ATTRS = {'NOTIFY_TIMEOUT_SECONDS'}
 _INT_ATTRS = {'PARALLEL_TRANSLATIONS', 'MAX_TOKENS_PER_CHUNK'}
 

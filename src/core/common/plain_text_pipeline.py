@@ -12,6 +12,7 @@ oversized block).
 
 Used by the EPUB and DOCX adapters when prompt_options['plain_text_mode'] is True.
 """
+import os
 import re
 from typing import Any, Awaitable, Callable, Dict, List, Optional, Tuple
 
@@ -295,13 +296,65 @@ def _reassemble(
     segments: List[Dict[str, Any]],
     translated_parts: List[str],
     source_paragraphs: List[str],
+    disable_fallback: bool = False,
 ) -> List[str]:
     """
     Write each segment's translation back to the source indices it covers.
 
     Empty source slots keep their original (empty) value; pieces of an
     oversized paragraph are concatenated in order into its single slot.
+    When disable_fallback is True, translated paragraphs are emitted in
+    order without padding missing slots with empty strings, preventing
+    untranslated source text from leaking into the output.
     """
+    if disable_fallback:
+        result: List[str] = []
+        segment_outputs: Dict[int, List[str]] = {}
+        for s_idx, segment in enumerate(segments):
+            text = translated_parts[s_idx] or ""
+            if segment['partial']:
+                continue
+            parts = _split_translated_back_to_paragraphs(text)
+            if not parts:
+                parts = [source_paragraphs[idx] for idx in segment['indices']]
+            segment_outputs[s_idx] = parts
+
+        src_to_segment: Dict[int, int] = {}
+        for s_idx, segment in enumerate(segments):
+            for idx in segment['indices']:
+                src_to_segment[idx] = s_idx
+
+        emitted_segments = set()
+        for idx, src_text in enumerate(source_paragraphs):
+            if not (src_text or "").strip():
+                result.append("")
+                continue
+
+            s_idx = src_to_segment.get(idx)
+            if s_idx is None:
+                result.append(src_text)
+                continue
+
+            segment = segments[s_idx]
+            if segment['partial']:
+                if idx not in emitted_segments:
+                    emitted_segments.add(idx)
+                    pieces = []
+                    for seg_i, seg in enumerate(segments):
+                        if seg['partial'] and seg['indices'][0] == idx:
+                            t = (translated_parts[seg_i] or "").strip()
+                            if t:
+                                pieces.append(t)
+                    joined = " ".join(pieces) if pieces else src_text
+                    result.append(joined)
+            else:
+                if s_idx not in emitted_segments:
+                    emitted_segments.add(s_idx)
+                    parts = segment_outputs.get(s_idx, [])
+                    result.extend(parts)
+
+        return result
+
     out: List[Optional[str]] = [None] * len(source_paragraphs)
     partial_pieces: Dict[int, List[str]] = {}
 
@@ -403,6 +456,15 @@ async def translate_paragraphs_plain(
         (translated_paragraphs, stats, was_interrupted)
     """
     stats = TranslationMetrics()
+    disable_fallback = (
+        bool(prompt_options.get('disable_paragraph_fallback'))
+        if prompt_options and 'disable_paragraph_fallback' in prompt_options
+        else (
+            os.getenv('DISABLE_PARAGRAPH_FALLBACK', '').strip().lower() in ('true', '1', 'yes')
+            or os.getenv('DISABLE_PARAGRAPH_REPAIR', '').strip().lower() in ('true', '1', 'yes')
+            or os.getenv('PLAIN_TEXT_ACCEPT_MISMATCH', '').strip().lower() in ('true', '1', 'yes')
+        )
+    )
 
     source = list(paragraphs)
     if not source or all(not (p or "").strip() for p in source):
@@ -677,6 +739,14 @@ async def translate_paragraphs_plain(
                                         f"split the paragraph into {got} parts - merged back "
                                         "into its single slot"
                                     )
+                            elif disable_fallback:
+                                if log_callback:
+                                    log_callback(
+                                        "plain_text_paragraph_mismatch_accepted",
+                                        f"Chunk {i + 1}/{len(chunks)} (segment {i}): the model "
+                                        f"returned {got} paragraph(s) instead of {expected} - "
+                                        "accepting translation without per-paragraph fallback"
+                                    )
                             else:
                                 if log_callback:
                                     log_callback(
@@ -801,7 +871,7 @@ async def translate_paragraphs_plain(
         _run_checkpoint_hook(_contiguous_len())
         _fill_remaining_with_source()
         safe_parts = [p if p is not None else "" for p in translated_parts]
-        rate_limit_error.partial_result = _reassemble(segments, safe_parts, source)
+        rate_limit_error.partial_result = _reassemble(segments, safe_parts, source, disable_fallback=disable_fallback)
         raise rate_limit_error
 
     # Interruption: the scheduler stopped launching new chunks; keep source text
@@ -817,8 +887,8 @@ async def translate_paragraphs_plain(
         _run_checkpoint_hook(resume_point)
         _fill_remaining_with_source()
         safe_parts = [p if p is not None else "" for p in translated_parts]
-        return _reassemble(segments, safe_parts, source), stats, True
+        return _reassemble(segments, safe_parts, source, disable_fallback=disable_fallback), stats, True
 
     # Any None left (shouldn't happen) falls back to empty string.
     safe_parts = [p if p is not None else "" for p in translated_parts]
-    return _reassemble(segments, safe_parts, source), stats, False
+    return _reassemble(segments, safe_parts, source, disable_fallback=disable_fallback), stats, False
