@@ -561,6 +561,19 @@
                             </label>
                         </div>
 
+                        <!-- Bypass Paragraph Fallback (Plain Text Mode) -->
+                        <div class="option-item">
+                            <label class="option-item__label">
+                                <input type="checkbox" id="disableParagraphFallback">
+                                <div>
+                                    <span class="option-item__title" data-i18n="settings:option_disable_paragraph_fallback_title">Bypass Paragraph Fallback (Plain Text Mode)</span>
+                                    <p class="option-item__description" data-i18n-html="settings:option_disable_paragraph_fallback_description">
+                                        Accept translations directly when the model returns a different number of paragraphs, skipping the expensive paragraph-by-paragraph fallback loop. Highly recommended when translating with large chunk sizes (e.g. 25k tokens).
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+
                         <!-- Text Cleanup (OCR Correction) -->
                         <div class="option-item">
                             <label class="option-item__label">

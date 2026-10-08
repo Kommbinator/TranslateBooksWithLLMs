@@ -57,6 +57,7 @@ const TARGETS = {
     noPause:      { tab: 'settings', section: 'settings', focus: 'disableAutoPause' },
     bilingual:    { tab: 'translate', section: null, focus: 'bilingualMode',           panel: 'preflight' },
     plainText:    { tab: 'translate', section: null, focus: 'plainTextMode',           panel: 'preflight' },
+    noFallback:   { tab: 'translate', section: null, focus: 'disableParagraphFallback', panel: 'preflight' },
     ocr:          { tab: 'translate', section: null, focus: 'textCleanup',             panel: 'preflight' },
     glossary:     { tab: 'translate', section: null, focus: 'glossarySelect',          panel: 'preflight' },
     instructions: { tab: 'translate', section: null, focus: 'customInstructionSelect', panel: 'preflight' },
@@ -156,6 +157,7 @@ function buildChips() {
 
     if (isChecked('bilingualMode'))     chips.push({ key: 'bilingual', label: t('translation:summary_bilingual') });
     if (isChecked('plainTextMode'))     chips.push({ key: 'plainText', label: t('translation:summary_plain_text_mode') });
+    if (isChecked('disableParagraphFallback')) chips.push({ key: 'noFallback', label: t('translation:summary_no_paragraph_fallback') });
     if (isChecked('textCleanup'))       chips.push({ key: 'ocr', label: t('translation:summary_ocr_cleanup') });
     if (isChecked('disableAutoPause'))  chips.push({ key: 'noPause', label: t('translation:summary_no_auto_pause') });
 
@@ -325,6 +327,7 @@ export const WATCHED_IDS = [
     'sourceLang', 'customSourceLang',
     'targetLang', 'customTargetLang',
     'bilingualMode', 'plainTextMode',
+    'disableParagraphFallback',
     'textCleanup', 'disableAutoPause',
     'glossarySelect', 'customInstructionSelect',
 ];

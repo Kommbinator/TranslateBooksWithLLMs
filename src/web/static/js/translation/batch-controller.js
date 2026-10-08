@@ -69,6 +69,7 @@ function getTranslationConfig(file) {
         text_cleanup: DomHelpers.getElement('textCleanup')?.checked || false,
         refine: refineAfter,
         plain_text_mode: DomHelpers.getElement('plainTextMode')?.checked || false,
+        disable_paragraph_fallback: DomHelpers.getElement('disableParagraphFallback')?.checked || false,
         custom_instruction_file: ciValue === '__auto__' ? '' : ciValue
     };
     if (ciValue === '__auto__') promptOptions.style_auto = true;

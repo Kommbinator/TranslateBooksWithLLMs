@@ -66,6 +66,8 @@
   "option_bilingual_description": "Incluye el texto original junto a la traducción. Cada fragmento muestra el texto de origen seguido de su traducción, ideal para aprender idiomas o comparar lado a lado.",
   "option_plain_text_title": "Modo texto plano (EPUB / DOCX)",
   "option_plain_text_description": "Simplifica en gran medida el formato antes de enviar el contenido al LLM para hacer la traducción más rápida y fiable — no es un modo de menor calidad. Muy adecuado para novelas sencillas y prosa simple, donde la estructura importa menos que leer el texto traducido. Solo se envía al LLM el texto de los párrafos; los estilos en línea y el marcado complejo se descartan. Se conservan títulos, listas y citas; las imágenes permanecen en la salida y se reagrupan al final de su párrafo original. Especialmente útil en LLMs pequeños o locales que tienen dificultades con los marcadores <code>[id0]</code>. Menos ideal para libros técnicos, guías ilustradas o cualquier texto donde el diseño aporta significado. Solo se aplica a archivos EPUB y DOCX.",
+  "option_disable_paragraph_fallback_title": "Omitir recuperación por párrafo (Modo texto plano)",
+  "option_disable_paragraph_fallback_description": "Aceptar las traducciones directamente cuando el modelo devuelva un número diferente de párrafos, omitiendo el costoso bucle de recuperación párrafo a párrafo. Muy recomendado con tamaños de fragmento grandes (p. ej., 25k tokens).",
   "option_text_cleanup_title": "Limpieza de texto (corrección de OCR)",
   "option_text_cleanup_description": "Para textos mal formateados o escaneados con OCR. Indica al LLM que corrija: saltos de línea rotos, espacios dobles, errores de puntuación y une párrafos divididos incorrectamente.",
 

@@ -36,6 +36,7 @@ const SYNCED_PREF_KEYS = [
     'textCleanup',
     'bilingualMode',
     'plainTextMode',
+    'disableParagraphFallback',
     'customInstructionFile'
 ];
 
@@ -152,6 +153,7 @@ export const SettingsManager = {
             { id: 'textCleanup', event: 'change' },
             { id: 'bilingualMode', event: 'change' },
             { id: 'plainTextMode', event: 'change' },
+            { id: 'disableParagraphFallback', event: 'change' },
             { id: 'customInstructionSelect', event: 'change' }
         ];
 
@@ -378,6 +380,12 @@ export const SettingsManager = {
                 plainTextCheckbox.checked = prefs.plainTextMode;
             }
         }
+        if (prefs.disableParagraphFallback !== undefined) {
+            const fallbackCheckbox = DomHelpers.getElement('disableParagraphFallback');
+            if (fallbackCheckbox) {
+                fallbackCheckbox.checked = prefs.disableParagraphFallback;
+            }
+        }
         // Note: disableAutoPause is now loaded from .env via /api/config in FormManager,
         // not from localStorage.
 
@@ -487,6 +495,12 @@ export const SettingsManager = {
                     plainTextCheckbox.checked = prefs.plainTextMode;
                 }
             }
+            if (prefs.disableParagraphFallback !== undefined) {
+                const fallbackCheckbox = DomHelpers.getElement('disableParagraphFallback');
+                if (fallbackCheckbox) {
+                    fallbackCheckbox.checked = prefs.disableParagraphFallback;
+                }
+            }
 
             if (prefs.customInstructionFile) {
                 // No-op while the select is still empty; the
@@ -557,6 +571,7 @@ export const SettingsManager = {
         const textCleanupCheckbox = DomHelpers.getElement('textCleanup');
         const bilingualModeCheckbox = DomHelpers.getElement('bilingualMode');
         const plainTextModeCheckbox = DomHelpers.getElement('plainTextMode');
+        const disableParagraphFallbackCheckbox = DomHelpers.getElement('disableParagraphFallback');
 
         const prefs = {
             lastProvider: DomHelpers.getValue('llmProvider'),
@@ -570,6 +585,7 @@ export const SettingsManager = {
             textCleanup: textCleanupCheckbox ? textCleanupCheckbox.checked : false,
             bilingualMode: bilingualModeCheckbox ? bilingualModeCheckbox.checked : false,
             plainTextMode: plainTextModeCheckbox ? plainTextModeCheckbox.checked : false,
+            disableParagraphFallback: disableParagraphFallbackCheckbox ? disableParagraphFallbackCheckbox.checked : false,
             customInstructionFile: DomHelpers.getValue('customInstructionSelect') || ''
         };
 

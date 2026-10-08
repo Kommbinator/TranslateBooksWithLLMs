@@ -66,6 +66,8 @@
   "option_bilingual_description": "Include original text alongside the translation. Each chunk displays the source text followed by its translation, ideal for language learning or side-by-side comparison.",
   "option_plain_text_title": "Plain Text Mode (EPUB / DOCX)",
   "option_plain_text_description": "Strips most formatting before sending content to the LLM to make translation faster and more reliable — not a lower-quality mode. Very well suited to simple novels and plain prose where structure matters less than reading the translated text. Only paragraph text is sent to the LLM, inline styles and complex markup are dropped. Headings, lists and blockquotes are kept; images stay in the output and are regrouped at the end of their original paragraph. Especially helpful on small or local LLMs that struggle with <code>[id0]</code> placeholders. Less ideal for technical books, illustrated guides or anything where layout carries meaning. Only applies to EPUB and DOCX files.",
+  "option_disable_paragraph_fallback_title": "Bypass Paragraph Fallback (Plain Text Mode)",
+  "option_disable_paragraph_fallback_description": "Accept translations directly when the model returns a different number of paragraphs, skipping the expensive paragraph-by-paragraph fallback loop. Highly recommended when translating with large chunk sizes (e.g. 25k tokens).",
   "option_text_cleanup_title": "Text Cleanup (OCR Correction)",
   "option_text_cleanup_description": "For poorly formatted or OCR-scanned texts. Instructs the LLM to fix: broken line breaks, double spaces, punctuation errors, and merge incorrectly split paragraphs.",
 

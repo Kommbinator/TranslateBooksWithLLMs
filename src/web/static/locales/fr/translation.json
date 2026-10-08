@@ -236,6 +236,7 @@
   "summary_no_auto_pause": "Pas de pause auto",
   "summary_bilingual": "Bilingue",
   "summary_plain_text_mode": "Mode texte brut",
+  "summary_no_paragraph_fallback": "Ignorer le repli",
   "summary_ocr_cleanup": "Nettoyage OCR",
   "summary_glossary": "Glossaire : {{name}}",
   "summary_instructions": "Instructions : {{name}}",

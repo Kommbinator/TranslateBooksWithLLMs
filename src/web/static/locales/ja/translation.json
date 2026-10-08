@@ -236,6 +236,7 @@
   "summary_no_auto_pause": "自動一時停止なし",
   "summary_bilingual": "バイリンガル",
   "summary_plain_text_mode": "プレーンテキストモード",
+  "summary_no_paragraph_fallback": "フォールバック回避",
   "summary_ocr_cleanup": "OCR クリーンアップ",
   "summary_glossary": "用語集：{{name}}",
   "summary_instructions": "指示：{{name}}",
