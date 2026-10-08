@@ -115,7 +115,8 @@ async def test_disable_fallback_preserves_empty_image_anchors(monkeypatch):
     assert out[0] == ""
     assert out[2] == ""
     assert "T::Chapter Title" in out[1]
-    assert "Body paragraph 1. Body paragraph 2." in out[3]
+    assert "Body paragraph 1. Body paragraph 2." in out[1]
+    assert len(out) == 3
     # No untranslated English text in any slot
     for slot in out:
         if slot:
